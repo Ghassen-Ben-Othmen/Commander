@@ -23,7 +23,7 @@ namespace Services.Test.Platform
         public async Task Can_get_platforms()
         {
             // Arrange
-            int expectedPlatformsCount = 3;
+            int expectedPlatformsCount = 4;
             string firstElementTitle = ".Net Core";
             string lastElementTitle = "Azure";
             using var context = new CommanderContext(_contextOptions);

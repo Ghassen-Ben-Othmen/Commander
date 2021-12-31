@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Data.Context;
+using Data.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -28,7 +29,7 @@ namespace API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            // Add DbContext Configs
             services.AddDbContext<CommanderContext>(opts => 
             {
                 opts.UseSqlite(Configuration.GetConnectionString("SqliteDB"));
@@ -39,6 +40,12 @@ namespace API
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
             });
+
+            // Add AutoMapper services
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+            // Add Model Services
+            services.AddScoped<PlatformService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

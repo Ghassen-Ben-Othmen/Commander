@@ -449,6 +449,7 @@ $RECYCLE.BIN/
 
 # database
 **/*.db
+**/*.db-*
 
 # dev settings
 **/appsettings.Development.json

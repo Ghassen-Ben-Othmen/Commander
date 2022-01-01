@@ -1,6 +1,7 @@
 ﻿using Data.Context;
 using Data.Services;
 using Microsoft.EntityFrameworkCore;
+using Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Services.Test.Platform
+namespace Services.Test
 {
     public class PlatformServiceTest
     {
@@ -33,7 +34,7 @@ namespace Services.Test.Platform
             var result = await service.All();
 
             // Assert
-            Assert.IsType<List<Models.Platform>>(result);
+            Assert.IsType<List<Platform>>(result);
             Assert.Equal(expectedPlatformsCount, result.Count());
             Assert.Equal(firstElementTitle, result.First().Title);
             Assert.Equal(lastElementTitle, result.Last().Title);
@@ -79,7 +80,7 @@ namespace Services.Test.Platform
             int expectedCount = (await service.All()).Count() + 1;
             int expectedId = 4;
             string expectedTitle = "Added Platform";
-            var platform = new Models.Platform { Title = "Added Platform" };
+            var platform = new Platform { Title = "Added Platform" };
 
             // Act
             var result = await service.Create(platform);
@@ -98,7 +99,7 @@ namespace Services.Test.Platform
             // Arrange
             using var context = new CommanderContext(_contextOptions);
             var service = new PlatformService(context);
-            Models.Platform platform = null;
+            Platform platform = null;
 
             // Act
             var result = await service.Create(platform);
@@ -113,7 +114,7 @@ namespace Services.Test.Platform
             // Arrange
             using var context = new CommanderContext(_contextOptions);
             var service = new PlatformService(context);
-            Models.Platform platform = new();
+            Platform platform = new();
 
             // Assert
             await Assert.ThrowsAnyAsync<Exception>(async () => await service.Create(platform));
@@ -180,11 +181,11 @@ namespace Services.Test.Platform
             context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
 
-            var platforms = new List<Models.Platform>
+            var platforms = new List<Platform>
             {
-                new Models.Platform{Title=".Net Core"},
-                new Models.Platform{Title="Docker"},
-                new Models.Platform{Title="Azure"}
+                new Platform{Title=".Net Core"},
+                new Platform{Title="Docker"},
+                new Platform{Title="Azure"}
             };
             context.Platforms.AddRange(platforms);
             context.SaveChanges();

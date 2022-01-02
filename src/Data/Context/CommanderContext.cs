@@ -18,7 +18,7 @@ namespace Data.Context
         public DbSet<Platform> Platforms { get; set; }
         public DbSet<Command> Commands { get; set; }
         public DbSet<Argument> Arguments { get; set; }
-        public DbSet<Attachment> Attchments { get; set; }
+        public DbSet<Attachment> Attachments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -42,7 +42,7 @@ namespace Data.Context
                       .OnDelete(DeleteBehavior.Cascade);
 
                 entity.Property(att => att.CreatedAt)
-                      .ValueGeneratedOnAdd();
+                      .HasDefaultValueSql("datetime('NOW')");
             });
         }
     }

@@ -47,6 +47,7 @@ namespace API
             // Add Model Services
             services.AddScoped<PlatformService>();
             services.AddScoped<CommandService>();
+            services.AddScoped<ArgumentService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

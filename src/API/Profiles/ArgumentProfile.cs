@@ -14,6 +14,11 @@ namespace API.Profiles
         {
             CreateMap<Argument, ArgumentRead>();
             CreateMap<ArgumentCreate, Argument>();
+            CreateMap<ArgumentUpdate, Argument>()
+                .ForAllMembers(opts =>
+                {
+                    opts.Condition((src, dest, member) => member != null);
+                });
         }
     }
 }

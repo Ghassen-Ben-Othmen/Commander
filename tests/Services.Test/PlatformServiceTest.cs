@@ -11,22 +11,19 @@ using Xunit;
 
 namespace Services.Test
 {
-    public class PlatformServiceTest
+    public class PlatformServiceTest : BaseTest
     {
-        private readonly DbContextOptions<CommanderContext> _contextOptions;
-        public PlatformServiceTest()
+        public PlatformServiceTest() : base(new DbContextOptionsBuilder<CommanderContext>().UseSqlite("Data Source=Test.db").Options)
         {
-            _contextOptions = new DbContextOptionsBuilder<CommanderContext>().UseSqlite("Data Source=Test.db").Options;
-            Seed();
         }
 
         [Fact]
         public async Task Can_get_platforms()
         {
             // Arrange
-            int expectedPlatformsCount = 3;
-            string firstElementTitle = ".Net Core";
-            string lastElementTitle = "Azure";
+            int expectedPlatformsCount = 2;
+            string firstElementTitle = "dotnet core";
+            string lastElementTitle = "Docker";
             using var context = new CommanderContext(_contextOptions);
             var service = new PlatformService(context);
 
@@ -41,8 +38,8 @@ namespace Services.Test
         }
 
         [Theory]
-        [InlineData(1, ".Net Core")]
-        [InlineData(3, "Azure")]
+        [InlineData(1, "dotnet core")]
+        [InlineData(2, "Docker")]
         public async void Can_get_platform_by_id(long id, string expectedTitle)
         {
             // Arrange
@@ -78,7 +75,7 @@ namespace Services.Test
             using var context = new CommanderContext(_contextOptions);
             var service = new PlatformService(context);
             int expectedCount = (await service.All()).Count() + 1;
-            int expectedId = 4;
+            int expectedId = 3;
             string expectedTitle = "Added Platform";
             var platform = new Platform { Title = "Added Platform" };
 
@@ -173,22 +170,6 @@ namespace Services.Test
 
             // Assert
             Assert.Equal(expectedResult, result);
-        }
-
-        private void Seed()
-        {
-            using var context = new CommanderContext(_contextOptions);
-            context.Database.EnsureDeleted();
-            context.Database.EnsureCreated();
-
-            var platforms = new List<Platform>
-            {
-                new Platform{Title=".Net Core"},
-                new Platform{Title="Docker"},
-                new Platform{Title="Azure"}
-            };
-            context.Platforms.AddRange(platforms);
-            context.SaveChanges();
         }
     }
 }

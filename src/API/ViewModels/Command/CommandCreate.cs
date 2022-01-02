@@ -14,7 +14,7 @@ namespace API.ViewModels.Command
         [Required]
         public string Cmd { get; set; }
         [Required]
-        public long PlatformId { get; set; }
+        public long? PlatformId { get; set; }
         public List<ArgumentCreate> Arguments { get; set; }
     }
 }

@@ -11,14 +11,11 @@ using Xunit;
 
 namespace Services.Test
 {
-    public class CommandServiceTest
+    public class CommandServiceTest : BaseTest
     {
-        private readonly DbContextOptions<CommanderContext> _contextOptions;
 
-        public CommandServiceTest()
+        public CommandServiceTest() : base(new DbContextOptionsBuilder<CommanderContext>().UseSqlite("Data Source=Test2.db").Options)
         {
-            _contextOptions = new DbContextOptionsBuilder<CommanderContext>().UseSqlite("Data Source=Test2.db").Options;
-            Seed();
         }
 
         [Theory]
@@ -221,43 +218,6 @@ namespace Services.Test
             // Assert
             Assert.Equal(expectedResult, result);
             Assert.Equal(expectedTotalCount, actualTotlaCount);
-        }
-
-        private void Seed()
-        {
-            using var contex = new CommanderContext(_contextOptions);
-            contex.Database.EnsureDeleted();
-            contex.Database.EnsureCreated();
-
-            var argumentsDotNetCmd = new List<Argument>
-            {
-                new Argument { Value = "-c Release", Description = "--configuration <config> Runs with specified config" }
-            };
-
-            var argumentsDockerCmd = new List<Argument>
-            {
-                new Argument { Value = "-p 8081:8080", Description = "Bind port to container hostPort:containerPort" },
-                new Argument { Value = "-d", Description = "Run in detached mode" }
-            };
-
-            var dotnetCommands = new List<Command>
-            {
-                new Command{Title="dotnet core run command", Description="build and run dotnet project",  Cmd = "dotnet run" , Arguments = argumentsDotNetCmd },
-            };
-
-            var dockerCommands = new List<Command>
-            {
-                new Command{Title="Docker run command", Description="Creates Docker container",  Cmd = "docker run" , Arguments = argumentsDockerCmd }
-            };
-
-            var platforms = new List<Platform>
-            {
-                new Platform { Title = "dotnet core", Commands = dotnetCommands },
-                new Platform { Title = "Docker", Commands = dockerCommands }
-            };
-
-            contex.Platforms.AddRange(platforms);
-            contex.SaveChanges();
         }
     }
 }

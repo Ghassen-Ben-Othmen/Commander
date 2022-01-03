@@ -38,9 +38,9 @@ namespace API.Controllers
 
         // GET /attachments/?commandId={id}
         [HttpGet]
-        public async Task<ActionResult<List<AttachmentRead>>> GetByCommandId([FromQuery] long id)
+        public async Task<ActionResult<List<AttachmentRead>>> GetByCommandId([FromQuery] long commandId)
         {
-            var result = await _attachmentService.GetByCommandId(id);
+            var result = await _attachmentService.GetByCommandId(commandId);
             var attachmentsRead = _mapper.Map<List<AttachmentRead>>(result);
 
             return Ok(attachmentsRead);

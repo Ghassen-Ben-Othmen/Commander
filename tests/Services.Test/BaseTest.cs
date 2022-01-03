@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Models.Utils.Utility;
 
 namespace Services.Test
 {
@@ -25,6 +26,20 @@ namespace Services.Test
             contex.Database.EnsureDeleted();
             contex.Database.EnsureCreated();
 
+            var attachments = new List<Attachment>
+            {
+                new Attachment
+                {
+                    Name = "Test attachment PDF",
+                    Type = AttachmentType.PDF
+                },
+                new Attachment
+                {
+                    Name = "Test attachment TXT",
+                    Type = AttachmentType.TXT
+                }
+            };
+
             var argumentsDotNetCmd = new List<Argument>
             {
                 new Argument { Value = "-c Release", Description = "--configuration <config> Runs with specified config" }
@@ -32,18 +47,39 @@ namespace Services.Test
 
             var argumentsDockerCmd = new List<Argument>
             {
-                new Argument { Value = "-p 8081:8080", Description = "Bind port to container hostPort:containerPort" },
-                new Argument { Value = "-d", Description = "Run in detached mode" }
+                new Argument 
+                { 
+                    Value = "-p 8081:8080", 
+                    Description = "Bind port to container hostPort:containerPort" 
+                },
+                new Argument 
+                { 
+                    Value = "-d", 
+                    Description = "Run in detached mode" 
+                }
             };
 
             var dotnetCommands = new List<Command>
             {
-                new Command{Title="dotnet core run command", Description="build and run dotnet project",  Cmd = "dotnet run" , Arguments = argumentsDotNetCmd },
+                new Command
+                {
+                    Title="dotnet core run command", 
+                    Description="build and run dotnet project",  
+                    Cmd = "dotnet run" , 
+                    Arguments = argumentsDotNetCmd ,
+                    Attachments = attachments
+                },
             };
 
             var dockerCommands = new List<Command>
             {
-                new Command{Title="Docker run command", Description="Creates Docker container",  Cmd = "docker run" , Arguments = argumentsDockerCmd }
+                new Command
+                {
+                    Title="Docker run command", 
+                    Description="Creates Docker container",  
+                    Cmd = "docker run" , 
+                    Arguments = argumentsDockerCmd 
+                }
             };
 
             var platforms = new List<Platform>

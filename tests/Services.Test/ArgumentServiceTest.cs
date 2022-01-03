@@ -18,6 +18,38 @@ namespace Services.Test
         {
         }
 
+        [Theory]
+        [InlineData(1, "-c Release")]
+        [InlineData(3, "-d")]
+        public async Task Can_get_by_id_(long id, string expectedValue)
+        {
+            // Arrange
+            using var context = new CommanderContext(_contextOptions);
+            var argumentService = new ArgumentService(context);
+
+            // Act
+            var result = await argumentService.GetById(id);
+
+            // Assert
+            Assert.IsType<Argument>(result);
+            Assert.Equal(expectedValue, result.Value);
+        }
+
+        [Theory]
+        [InlineData(44)]
+        public async Task Handle_get_by_id_returns_null_if_argument_not_exist(long id)
+        {
+            // Arrange
+            using var context = new CommanderContext(_contextOptions);
+            var argumentService = new ArgumentService(context);
+
+            // Act
+            var result = await argumentService.GetById(id);
+
+            // Assert
+            Assert.Null(result);
+        }
+
         [Fact]
         public async Task Can_create_argument()
         {

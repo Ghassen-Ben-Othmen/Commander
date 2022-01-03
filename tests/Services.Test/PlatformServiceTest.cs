@@ -134,6 +134,39 @@ namespace Services.Test
             Assert.Equal(expectedTitle, result.Title);
         }
 
+        [Fact]
+        public async Task Handle_update_returns_null_if_platform_isnull()
+        {
+            // Arrange
+            using var context = new CommanderContext(_contextOptions);
+            var service = new PlatformService(context);
+
+            // Act
+            var result = await service.PartialUpdate(null);
+
+            // Assert
+            Assert.Null(result);
+        }
+
+        [Theory]
+        [InlineData(33)]
+        public async Task Handle_update_returns_null_if_platform_not_exist(long id)
+        {
+            // Arrange
+            using var context = new CommanderContext(_contextOptions);
+            var service = new PlatformService(context);
+            var platform = new Platform
+            {
+                Id = id
+            };
+
+            // Act
+            var result = await service.PartialUpdate(platform);
+
+            // Assert
+            Assert.Null(result);
+        }
+
         [Theory]
         [InlineData(1)]
         public async Task Can_delete_platform(long id)

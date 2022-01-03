@@ -18,6 +18,10 @@ namespace Data.Services
             _context = context;
         }
 
+        // Get by Id
+        public async Task<Attachment> GetById(long id)
+            => await _context.Attachments.FirstOrDefaultAsync(att => att.Id == id);
+
         // Get By CommandId
         public async Task<List<Attachment>> GetByCommandId(long commandId)
             => await _context.Attachments.Where(att => att.CommandId == commandId).ToListAsync();
@@ -36,7 +40,7 @@ namespace Data.Services
         // Delete Attachment
         public async Task<bool> Delete(long id)
         {
-            var attachment = await _context.Attachments.FirstOrDefaultAsync(att => att.Id == id);
+            var attachment = await GetById(id);
             if (attachment == null)
                 return false;
 

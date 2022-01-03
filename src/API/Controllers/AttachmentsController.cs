@@ -38,9 +38,9 @@ namespace API.Controllers
 
         // GET /attachments/?commandId={id}
         [HttpGet]
-        public async Task<ActionResult<List<AttachmentRead>>> GetByCommandId([FromQuery] long id)
+        public async Task<ActionResult<List<AttachmentRead>>> GetByCommandId([FromQuery] long commandId)
         {
-            var result = await _attachmentService.GetByCommandId(id);
+            var result = await _attachmentService.GetByCommandId(commandId);
             var attachmentsRead = _mapper.Map<List<AttachmentRead>>(result);
 
             return Ok(attachmentsRead);
@@ -50,10 +50,18 @@ namespace API.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(long id)
         {
+            var attachment = await _attachmentService.GetById(id);
+            if (attachment is null)
+                return NotFound();
+
+            string fileName = attachment.Name;
             var result = await _attachmentService.Delete(id);
 
             if (!result)
                 return NotFound();
+
+            DeleteFile(fileName);
+            
             return Ok();
         }
 
@@ -90,6 +98,26 @@ namespace API.Controllers
             }
 
             return BadRequest();
+        }
+
+        private async void DeleteFile(string fileName)
+        {
+            await Task.Run(() =>
+            {
+                string filePath = Path.Combine(_env.WebRootPath, fileName);
+                FileInfo fileInfo = new(filePath);
+                try
+                {
+                    if (System.IO.File.Exists(filePath))
+                    {
+                        fileInfo.Delete();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex.StackTrace);
+                }
+            });
         }
 
         private (bool, string) UploadFile(IFormFile file)

@@ -60,7 +60,7 @@ namespace API.Controllers
             if (!result)
                 return NotFound();
 
-            DeleteFile(fileName);
+            DeleteFileAsync(fileName);
             
             return Ok();
         }
@@ -100,7 +100,7 @@ namespace API.Controllers
             return BadRequest();
         }
 
-        private async void DeleteFile(string fileName)
+        private async void DeleteFileAsync(string fileName)
         {
             await Task.Run(() =>
             {

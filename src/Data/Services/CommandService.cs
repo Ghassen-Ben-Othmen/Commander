@@ -19,13 +19,19 @@ namespace Data.Services
         }
 
         // Get All the commands with Arguments
-        public async Task<List<Command>> All(long? platformId = null)
+        public async Task<List<Command>> All(long? platformId = null, uint page = 0, uint size = 15)
         {
             IQueryable<Command>  results = _context.Commands;
 
             if (platformId.HasValue)
             {
                 results = results.Where(c => c.PlatformId == platformId.Value);
+            }
+
+            if (page > 0)
+            {
+                size = size > 0 ? size : 15;
+                results = results.Skip((int)(size * (page - 1))).Take((int)size);
             }
 
             return await results.Include(c => c.Arguments).Include(c => c.Platform).ToListAsync();

@@ -79,13 +79,26 @@ namespace Services.Test
                     Description="Creates Docker container",  
                     Cmd = "docker run" , 
                     Arguments = argumentsDockerCmd 
+                },
+                new Command
+                {
+                    Title="Docker build command",
+                    Description="Creates Docker image",
+                    Cmd = "docker build . -t tag"
+                },
+                new Command
+                {
+                    Title="Docker ps command",
+                    Description="list active containers",
+                    Cmd = "docker ps -a"
                 }
             };
 
             var platforms = new List<Platform>
             {
                 new Platform { Title = "dotnet core", Commands = dotnetCommands },
-                new Platform { Title = "Docker", Commands = dockerCommands }
+                new Platform { Title = "Docker", Commands = dockerCommands },
+                new Platform { Title = "ABC" }
             };
 
             contex.Platforms.AddRange(platforms);

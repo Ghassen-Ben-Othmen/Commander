@@ -23,9 +23,9 @@ namespace API.Controllers
 
         // GET /platforms/
         [HttpGet]
-        public async Task<ActionResult<List<PlatformRead>>> GetAll()
+        public async Task<ActionResult<List<PlatformRead>>> GetAll([FromQuery] uint page, [FromQuery] uint size)
         {
-            var platforms = await _platformService.All();
+            var platforms = await _platformService.All(page, size);
             if (platforms == null)
                 return BadRequest();
 

@@ -30,8 +30,18 @@ namespace Data.Services
         }
 
         // Get All Platforms from databse
-        public async Task<List<Platform>> All() 
-            => await _context.Platforms.ToListAsync();
+        public async Task<List<Platform>> All(uint page = 0, uint size = 15)
+        {
+            IQueryable<Platform> results = _context.Platforms;
+
+            if (page > 0)
+            {
+                size = size > 0 ? size : 15;
+                results = results.Skip((int)(size * (page - 1))).Take((int)size);
+            }
+
+            return await results.ToListAsync();
+        }
 
         // Get Platform by Id
         // For Testing Purposes

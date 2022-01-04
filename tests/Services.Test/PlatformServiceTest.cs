@@ -17,24 +17,45 @@ namespace Services.Test
         {
         }
 
-        [Fact]
-        public async Task Can_get_platforms()
+        [Theory]
+        [InlineData(null, null, 3)]
+        [InlineData(null, 1u, 3)]
+        [InlineData(0u, 1u, 3)]
+        [InlineData(1u, null, 3)]
+        [InlineData(1u, 1u, 1)]
+        [InlineData(2u, 1u, 1)]
+        [InlineData(3u, 1u, 1)]
+        [InlineData(4u, 1u, 0)]
+        [InlineData(1u, 2u, 2)]
+        [InlineData(1u, 5u, 3)]
+        public async Task Can_get_platforms(uint? page, uint? size, int expectedCount)
         {
             // Arrange
-            int expectedPlatformsCount = 2;
-            string firstElementTitle = "dotnet core";
-            string lastElementTitle = "Docker";
             using var context = new CommanderContext(_contextOptions);
             var service = new PlatformService(context);
 
             // Act
-            var result = await service.All();
+            List<Platform> result = null;
+            if (page.HasValue)
+            {
+                if (size.HasValue)
+                {
+                    result = await service.All(page.Value, size.Value);
+                }
+                else
+                {
+                    result = await service.All(page.Value);
+                }
+                
+            }
+            else
+            {
+                result = await service.All();
+            }
 
             // Assert
             Assert.IsType<List<Platform>>(result);
-            Assert.Equal(expectedPlatformsCount, result.Count());
-            Assert.Equal(firstElementTitle, result.First().Title);
-            Assert.Equal(lastElementTitle, result.Last().Title);
+            Assert.Equal(expectedCount, result.Count());
         }
 
         [Theory]
@@ -75,7 +96,7 @@ namespace Services.Test
             using var context = new CommanderContext(_contextOptions);
             var service = new PlatformService(context);
             int expectedCount = (await service.All()).Count() + 1;
-            int expectedId = 3;
+            long expectedId = (await service.All()).Last().Id + 1;
             string expectedTitle = "Added Platform";
             var platform = new Platform { Title = "Added Platform" };
 

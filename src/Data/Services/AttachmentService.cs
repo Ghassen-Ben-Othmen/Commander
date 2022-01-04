@@ -24,7 +24,7 @@ namespace Data.Services
 
         // Get By CommandId
         public async Task<List<Attachment>> GetByCommandId(long commandId)
-            => await _context.Attachments.Where(att => att.CommandId == commandId).ToListAsync();
+            => await _context.Attachments.Where(att => att.CommandId == commandId).OrderByDescending(att => att.Id).ToListAsync();
 
         // Create Attachment
         public async Task<Attachment> Create(Attachment attachment)

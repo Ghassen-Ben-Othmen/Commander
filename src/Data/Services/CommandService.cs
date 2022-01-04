@@ -21,7 +21,7 @@ namespace Data.Services
         // Get All the commands with Arguments
         public async Task<List<Command>> All(long? platformId = null, uint page = 0, uint size = 15)
         {
-            IQueryable<Command>  results = _context.Commands;
+            IQueryable<Command>  results = _context.Commands.OrderByDescending(p => p.Id);
 
             if (platformId.HasValue)
             {

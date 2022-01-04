@@ -32,7 +32,7 @@ namespace Data.Services
         // Get All Platforms from databse
         public async Task<List<Platform>> All(uint page = 0, uint size = 15)
         {
-            IQueryable<Platform> results = _context.Platforms;
+            IQueryable<Platform> results = _context.Platforms.OrderByDescending(p => p.Id);
 
             if (page > 0)
             {

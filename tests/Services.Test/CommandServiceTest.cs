@@ -19,18 +19,47 @@ namespace Services.Test
         }
 
         [Theory]
-        [InlineData(null, 2)]
-        [InlineData(1, 1)]
-        [InlineData(2, 1)]
-        [InlineData(3, 0)]
-        public async Task Can_get_all_cammands(long? platformId, int expectedCount)
+        [InlineData(null, null, null, 4)]
+        [InlineData(1, null, null, 1)]
+        [InlineData(2, null, null, 3)]
+        [InlineData(3, null, null, 0)]
+        [InlineData(55, null, null, 0)]
+
+        [InlineData(2, null, 1u, 3)]
+        [InlineData(2, 0u, 1u, 3)]
+        [InlineData(2, 1u, null, 3)]
+        [InlineData(2, 1u, 1u, 1)]
+        [InlineData(2, 2u, 1u, 1)]
+        [InlineData(2, 3u, 1u, 1)]
+        [InlineData(2, 4u, 1u, 0)]
+        [InlineData(2, 1u, 2u, 2)]
+        [InlineData(2, 1u, 5u, 3)]
+        [InlineData(1, 1u, 2u, 1)]
+        [InlineData(1, 2u, 2u, 0)]
+        public async Task Can_get_all_cammands(long? platformId, uint? page, uint? size, int expectedCount)
         {
             // Arrange
             using var context = new CommanderContext(_contextOptions);
             var commandService = new CommandService(context);
 
             // Act
-            var result = await commandService.All(platformId);
+            List<Command> result = null;
+            if (page.HasValue)
+            {
+                if (size.HasValue)
+                {
+                    result = await commandService.All(platformId, page.Value, size.Value);
+                }
+                else
+                {
+                    result = await commandService.All(platformId, page.Value);
+                }
+
+            }
+            else
+            {
+                result = await commandService.All(platformId);
+            }
 
             // Assert
             Assert.IsType<List<Command>>(result);
@@ -57,7 +86,7 @@ namespace Services.Test
         }
 
         [Theory]
-        [InlineData(3)]
+        [InlineData(55)]
         public async Task Handle_get_returns_null_if_command_not_exist(long id)
         {
             // Arrange
@@ -77,8 +106,8 @@ namespace Services.Test
             // Arrange
             using var context = new CommanderContext(_contextOptions);
             var commandService = new CommandService(context);
-            int expectedId = 3;
-            int expectedCount = 3;
+            long expectedId = (await commandService.All()).First().Id + 1;
+            int expectedCount = (await commandService.All()).Count + 1;
             var command = new Command
             {
                 Title = "Test Command",
@@ -203,8 +232,8 @@ namespace Services.Test
         }
 
         [Theory]
-        [InlineData(1, true, 1)]
-        [InlineData(3, false, 2)]
+        [InlineData(1, true, 3)]
+        [InlineData(44, false, 4)]
         public async Task Can_delete_command(long id, bool expectedResult, int expectedTotalCount)
         {
             // Arrange

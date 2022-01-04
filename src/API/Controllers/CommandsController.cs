@@ -23,9 +23,9 @@ namespace API.Controllers
 
         // GET /commands/
         [HttpGet]
-        public async Task<ActionResult<List<CommandRead>>> GetAll([FromQuery] long? platformId)
+        public async Task<ActionResult<List<CommandRead>>> GetAll([FromQuery] long? platformId, [FromQuery] uint page, [FromQuery] uint size)
         {
-            var commands = await _commandService.All(platformId);
+            var commands = await _commandService.All(platformId, page, size);
             if (commands == null)
                 return BadRequest();
 

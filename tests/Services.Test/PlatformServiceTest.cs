@@ -96,7 +96,7 @@ namespace Services.Test
             using var context = new CommanderContext(_contextOptions);
             var service = new PlatformService(context);
             int expectedCount = (await service.All()).Count() + 1;
-            long expectedId = (await service.All()).Last().Id + 1;
+            long expectedId = (await service.All()).First().Id + 1;
             string expectedTitle = "Added Platform";
             var platform = new Platform { Title = "Added Platform" };
 

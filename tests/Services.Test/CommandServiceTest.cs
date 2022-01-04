@@ -106,7 +106,7 @@ namespace Services.Test
             // Arrange
             using var context = new CommanderContext(_contextOptions);
             var commandService = new CommandService(context);
-            long expectedId = (await commandService.All()).Last().Id + 1;
+            long expectedId = (await commandService.All()).First().Id + 1;
             int expectedCount = (await commandService.All()).Count + 1;
             var command = new Command
             {

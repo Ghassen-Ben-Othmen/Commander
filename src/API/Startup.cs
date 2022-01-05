@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using API.Middlwares;
 using Data.Context;
 using Data.Services;
 using Microsoft.AspNetCore.Builder;
@@ -60,6 +61,8 @@ namespace API
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1"));
             }
+
+            app.UseMiddleware<ExceptionMiddleware>();
 
             // app.UseHttpsRedirection();
 
